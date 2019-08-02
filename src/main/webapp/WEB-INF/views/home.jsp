@@ -55,11 +55,24 @@
 		}
 		session.setAttribute("invalidDate", null);
 	%>
+
 	<header class="site-header js-site-header">
 		<div class="container-fluid">
 			<div class="row align-items-center">
 				<div class="col-6 col-lg-4 site-logo" data-aos="fade">
 					<a href="index.html">HVNR</a>
+					<%
+						if (session.getAttribute("userFullName") != null) {
+					%>
+					<h4>
+						<%
+							out.println(session.getAttribute("userFullName"));
+						%>
+					</h4>
+					<%
+						}
+						session.setAttribute("invalidDate", null);
+					%>
 				</div>
 				<div class="col-6 col-lg-8">
 
@@ -76,8 +89,8 @@
 									<div class="col-md-6 mx-auto">
 										<ul class="list-unstyled menu">
 											<li class="active"><a href="home.jsp">Home</a></li>
-											<li><a href="login.jsp">Login</a></li>
-											<li><a href="register.jsp">Register</a></li>
+											<li><a href="loginPage">Login</a></li>
+											<li><a href="Register">Register</a></li>
 										</ul>
 									</div>
 								</div>

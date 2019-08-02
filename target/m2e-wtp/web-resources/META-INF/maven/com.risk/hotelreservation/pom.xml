@@ -139,6 +139,11 @@
 			<version>${dbunit.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.passay</groupId>
+			<artifactId>passay</artifactId>
+			<version>1.3.0</version>
+		</dependency>
 
 	</dependencies>
 

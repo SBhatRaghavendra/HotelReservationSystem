@@ -1852,3 +1852,48 @@ table {
 .backGround {
 	background-color: #8c8c8c;
 }
+
+#btn1 {
+	display: none;
+}
+
+#hotelListTop td {
+	padding:10px;
+}
+
+#hiddenCol {
+	display: none;
+}
+
+#error {
+	color: black;
+	font-size: 22px;
+}
+
+
+.select-dropdown {
+    /* -webkit-box-shadow: none !important; */
+    box-shadow: none !important;
+    color: #a6a6a6;
+    width: 70%;
+    height: 50px;
+    border-width: 2px;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.submit-btn {
+	position: relative;
+	background-color: #ffba5a;
+	color: white;
+	padding: 10px 10px;
+	border: none;
+	cursor: pointer;
+	font-size: 18px;
+	left: 45%;
+	border-radius: 5px;
+}

@@ -27,7 +27,7 @@ public class HomeServiceImpl implements HomeService {
 		try {
 			return sdf.parse(checkInDate).before(sdf.parse(checkOutDate));
 		} catch (ParseException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return true;
 	}
@@ -38,8 +38,9 @@ public class HomeServiceImpl implements HomeService {
 		return hotelDetailsDao.getHotelList(location, checkInDate, checkOutDate, roomType);
 	}
 	
-	public Map<HotelDetails, Integer> getCountOfRooms(Set<HotelDetails> hotelDetails) {
-		return hotelDetailsDao.getCountOfRooms(hotelDetails);
+	@Transactional
+	public int checkAvailability(int hotelId, String checkInDate, String checkOutDate, int roomType) {
+		return hotelDetailsDao.checkAvailability(hotelId, checkInDate, checkOutDate, roomType);
 	}
 
 }

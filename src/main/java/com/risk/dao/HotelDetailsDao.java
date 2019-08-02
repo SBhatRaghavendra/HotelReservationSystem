@@ -12,5 +12,5 @@ import com.risk.model.HotelDetails;
 @Repository
 public interface HotelDetailsDao {
 	public List<HotelDetails> getHotelList(String location, String checkInDate, String checkOutDate, int roomType);
-	public Map<HotelDetails, Integer> getCountOfRooms(Set<HotelDetails> hotelDetails);
+	public int checkAvailability(int hotelId, String checkInDate, String checkOutDate, int roomType);
 }

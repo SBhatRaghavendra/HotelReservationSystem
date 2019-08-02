@@ -26,8 +26,6 @@ import com.risk.model.Rooms;
 @Repository
 public class HotelDetailsDaoImpl implements HotelDetailsDao {
 
-	private List<HotelDetails> hotelList = new ArrayList<HotelDetails>();
-
 	@Autowired
 	private SessionFactory sessionFactory;
 
@@ -37,37 +35,119 @@ public class HotelDetailsDaoImpl implements HotelDetailsDao {
 	 */
 	@Override
 	public List<HotelDetails> getHotelList(String location, String checkInDate, String checkOutDate, int roomType) {
-		List<Object[]> hotels = sessionFactory.getCurrentSession().createSQLQuery(
-				"select min(roomPrice), hotelName, hotelImgUrl from hotel, rooms where hotel.hotelId = rooms.hotelId and roomType = "
-						+ roomType + " and hotelArea = '" + location + "'")
-				.list();
-		
-		for(Object[] hotel: hotels) {
-			hotelList.add((new HotelDetails(hotel[1].toString(), hotel[2].toString(), (Integer)hotel[0])));
-		}
+			List<Object[]> hotels = sessionFactory.getCurrentSession().createSQLQuery(
+					"select distinct roomPrice, hotelName, hotelImgUrl, hotel.hotelId from hotel, rooms where hotel.hotelId = rooms.hotelId and roomType = "
+							+ roomType + " and hotelArea = '" + location + "'")
+					.list();
+			List<HotelDetails> hotelList = new ArrayList<HotelDetails>();
+			
+			for (Object[] hotel : hotels) {
+				hotelList.add((new HotelDetails(hotel[1].toString(), hotel[2].toString(), (Integer) hotel[0], (Integer)hotel[3])));
+			}
 
 		return hotelList;
 	}
 
-	public Map<HotelDetails, Integer> getCountOfRooms(Set<HotelDetails> hotelDetails) {
-		Map<HotelDetails, Integer> countOfRooms = new HashMap<HotelDetails, Integer>();
+	
+	/*
+	 * This method returns a boolean value indicating whether the hotel room can be booked or not by taking in the
+	 * parameters hotelId, checkInDate, checkOutDate
+	 */
+	@Override
+	public int checkAvailability(int hotelId, String checkInDate, String checkOutDate, int roomType) {
+		int int_roomId = 0;
+		
+		List<Object[]> rooms = sessionFactory.getCurrentSession().createSQLQuery(
+				"select roomId, checkInDate, checkOutDate from bookings where roomId in (select roomId from rooms where rooms.hotelId = " + hotelId+ " and roomType = " + roomType + ")")
+				.list();
 
-		for (HotelDetails hotel1 : hotelList) {
-			for (HotelDetails hotel2 : hotelList) {
-				if (!(hotel1.equals(hotel2))) {
-					if (countOfRooms.get(hotel1) == null && countOfRooms.get(hotel2) == null) {
-						countOfRooms.put(hotel1, 1);
-					} else if (hotel1.toString().equals(hotel2.toString())) {
-						if (countOfRooms.get(hotel1) != null) {
-							int count = countOfRooms.get(hotel1);
-							countOfRooms.put(hotel1, count + 1);
+		Map<Integer, Boolean> roomIds = new HashMap<Integer, Boolean>();
+
+		for (Object[] room : rooms) {
+			roomIds.put((Integer) room[0], true);
+		}
+
+		SimpleDateFormat sdf1 = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+
+		for (Object[] room : rooms) {
+			String dbCheckInDate = room[1].toString();
+			String dbCheckOutDate = room[2].toString();
+
+			// If rooms are not booked
+			if (roomIds.get((Integer) room[0]) != false) {
+				try {
+					// Check for availability of rooms
+					if (sdf2.parse(dbCheckInDate).before(sdf1.parse(checkInDate))) {
+						if (sdf1.parse(checkInDate).before(sdf2.parse(dbCheckOutDate))) {
+							// roomIds.remove((Integer)room[0]);
+							roomIds.put((Integer) room[0], false);
 						}
 					}
+
+					if (sdf2.parse(dbCheckInDate).before(sdf1.parse(checkOutDate))) {
+						if (sdf1.parse(checkOutDate).before(sdf2.parse(dbCheckOutDate))) {
+							// roomIds.remove((Integer)room[0]);
+							roomIds.put((Integer) room[0], false);
+						}
+					}
+
+					// If DB dates are within the range of user entered dates
+					if (sdf1.parse(checkInDate).before(sdf2.parse(dbCheckInDate))
+							&& sdf2.parse(dbCheckOutDate).before(sdf1.parse(checkOutDate))) {
+						// roomIds.remove((Integer)room[0]);
+						roomIds.put((Integer) room[0], false);
+					}
+
+					// Same dates cannot be reserved
+					if (sdf1.parse(checkInDate).compareTo(sdf2.parse(dbCheckInDate)) == 0
+							&& sdf1.parse(checkOutDate).compareTo(sdf2.parse(dbCheckOutDate)) == 0) {
+						// roomIds.remove((Integer)room[0]);
+						roomIds.put((Integer) room[0], false);
+					}
+
+				} catch (ParseException e) {
+					e.printStackTrace();
 				}
 			}
 		}
 
-		return countOfRooms;
-	}
+		Set<Integer> roomIdsSet = new HashSet<Integer>();
 
+		// Store available roomIds in a Set to keep unique roomIds
+		for (Object[] room : rooms) {
+			if (roomIds.get((Integer) room[0]) == true) {
+				roomIdsSet.add((Integer) room[0]);
+				int_roomId = (Integer) room[0];
+			}
+		}
+		
+		List<HotelDetails> hotelList = new ArrayList<HotelDetails>();
+
+		// Retrieve hotel details
+		for (Integer roomId : roomIdsSet) {
+			List<Object[]> hotelDetails = sessionFactory.getCurrentSession().createSQLQuery(
+					"select hotel.hotelId, hotelName, hotelImgUrl, roomPrice from hotel, rooms where hotel.hotelId = rooms.hotelId and roomId = "
+							+ roomId)
+					.list();
+			
+			for (Object[] hotel : hotelDetails) {
+				hotelList.add(new HotelDetails(hotel[1].toString(), hotel[2].toString(), (Integer) hotel[3], (Integer) hotel[0]));
+			}
+
+		}
+		
+		// If none of the roooms of hotel are booked, add that hotel to availability list
+				List<Object[]> hotelDetails = sessionFactory.getCurrentSession().createSQLQuery(
+						"select hotel.hotelId, hotelName, hotelImgUrl, roomPrice, roomId from hotel, rooms where hotel.hotelId = rooms.hotelId and hotel.hotelId = " + hotelId
+								+ " and roomType = " + roomType + " and roomId not in (select roomId from bookings)")
+						.list();
+
+				for (Object[] hotel : hotelDetails) {
+					hotelList.add(new HotelDetails(hotel[1].toString(), hotel[2].toString(), (Integer) hotel[3], (Integer) hotel[0]));
+					int_roomId = (Integer) hotel[4];
+				}
+				
+		return int_roomId;
+	}
 }
