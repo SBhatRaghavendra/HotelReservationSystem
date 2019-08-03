@@ -1819,7 +1819,7 @@ opacity
 
 .img-dimensions {
 	height: 500px;
-	width: fill-content;
+	width: 500px;
 }
 
 table {
@@ -1890,10 +1890,24 @@ table {
 	position: relative;
 	background-color: #ffba5a;
 	color: white;
-	padding: 10px 10px;
+	padding: 8px 8px;
 	border: none;
 	cursor: pointer;
 	font-size: 18px;
 	left: 45%;
 	border-radius: 5px;
+}
+
+.hotelDetails {
+	text-align: center !important;
+	color: white;
+}
+
+.hotelDetails tr{
+	padding: 5px 5px;
+}
+
+.username {
+	float: right;
+	color: white;
 }

@@ -1,8 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page isELIgnored="false"%>
+<%@include file="/WEB-INF/views/include.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,12 +39,12 @@ td {
 
 			<tr>
 				<td class="labels">Hotel Name</td>
-				<td>${hotelName}</td>
+				<td><% out.println(session.getAttribute("hotelName")); %></td>
 			</tr>
 
 			<tr>
 				<td class="labels">Price</td>
-				<td>${roomPrice}</td>
+				<td><% out.println(session.getAttribute("roomPrice")); %></td>
 			</tr>
 
 			<tr>
@@ -61,7 +57,7 @@ td {
 			</tr>
 
 		</table>
-		<input type="text" name="" value="${roomId}" readonly="readonly" hidden="true"/>
+		<input type="text" name="" value="<% out.println(session.getAttribute("roomId")); %>" readonly="readonly" hidden="true"/>
 		<br> <input type="submit" class = "submit-btn" value="Pay Now" />
 
 

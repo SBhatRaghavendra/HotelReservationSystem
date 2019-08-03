@@ -1,8 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page isELIgnored="false"%>
+<%@include file="/WEB-INF/views/include.jsp"%>
 <%@ page session="true"%>
 
 <!DOCTYPE html>
@@ -14,9 +10,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="" />
-<meta name="keywords" content="" />
-<meta name="author" content="" />
+
 <link rel="stylesheet" type="text/css"
 	href="//fonts.googleapis.com/css?family=|Roboto+Sans:400,700|Playfair+Display:400,700">
 
@@ -40,9 +34,7 @@
 
 <!-- Theme Style -->
 <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
-<script>
-	localStorage.clear();
-</script>
+
 </head>
 <body>
 	<%
@@ -62,9 +54,9 @@
 				<div class="col-6 col-lg-4 site-logo" data-aos="fade">
 					<a href="index.html">HVNR</a>
 					<%
-						if (session.getAttribute("userFullName") != null) {
+						if(session.getAttribute("loggedOut") == null) {
 					%>
-					<h4>
+					<h4 class="username">
 						<%
 							out.println(session.getAttribute("userFullName"));
 						%>

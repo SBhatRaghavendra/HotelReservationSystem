@@ -30,6 +30,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.risk.model.Bookings;
 import com.risk.model.HotelDetails;
 import com.risk.model.Rooms;
+import com.risk.model.User;
 import com.risk.service.BookingService;
 import com.risk.service.HomeService;
 import com.risk.service.RoomService;
@@ -37,105 +38,111 @@ import com.risk.service.RoomService;
 @Controller
 @RequestMapping("/")
 public class CustomerController {
-	
-	List<HotelDetails> hotelDetails;
-	
+
 	@Autowired
 	HomeService homeService;
-	
+
 	@Autowired
 	BookingService bookingService;
-	
+
 	@Autowired
 	RoomService roomService;
-	
+
+	List<HotelDetails> g_hotelDetails;
 	String g_checkInDate;
 	String g_checkOutDate;
 	int g_roomType;
 	int g_roomPrice;
 	int g_roomId;
 	String g_hotelName;
-	
+
 	@RequestMapping(value = { "/", "/index", "/home" }, method = RequestMethod.GET)
 	public String homePage(ModelMap model) {
 		return "home";
 	}
 
 	@RequestMapping(value = { "/homeEntryValidation" }, method = RequestMethod.POST)
-    public String validateHomeEntry(
-    		@RequestParam("location") String location,
-			@RequestParam("checkInDate") String checkInDate,
-			@RequestParam("checkOutDate") String checkOutDate,
-			@RequestParam("roomType") int roomType,HttpServletRequest request) {
-		
-		if(!homeService.isValidDates(checkInDate, checkOutDate)) {
+	public String validateHomeEntry(@RequestParam("location") String location,
+			@RequestParam("checkInDate") String checkInDate, @RequestParam("checkOutDate") String checkOutDate,
+			@RequestParam("roomType") int roomType, HttpServletRequest request) {
+
+		if (!homeService.isValidDates(checkInDate, checkOutDate)) {
 			request.getSession().setAttribute("invalidDate", "invalidDate");
 			return "home";
 		}
-		
+
 		g_checkInDate = checkInDate;
 		g_checkOutDate = checkOutDate;
 		g_roomType = roomType;
-		
-		hotelDetails = null;
-		hotelDetails = homeService.getHotelList(location, checkInDate, checkOutDate, roomType);
-		
+
+		g_hotelDetails = null;
+		g_hotelDetails = homeService.getHotelList(location, checkInDate, checkOutDate, roomType);
+
 		return "redirect:/listHotels";
-    }
-	
+	}
+
 	@RequestMapping(value = "/listHotels", method = RequestMethod.GET)
 	public ModelAndView listHotels(ModelAndView modelAndView, Model model) {
 		modelAndView.setViewName("HotelList");
-		modelAndView.addObject("hotelDetails", hotelDetails);
+		modelAndView.addObject("hotelDetails", g_hotelDetails);
 		return modelAndView;
 	}
-	
+
 	@RequestMapping(value = "/checkAvailabilty", method = RequestMethod.POST)
-	public ModelAndView checkAvailabilty(
-			@RequestParam("hotelId") int hotelId, 
-			@RequestParam("roomPrice") int roomPrice,
-			@RequestParam("hotelName") String hotelName,
-			ModelAndView modelAndView, Model model) {
+	public ModelAndView checkAvailabilty(@RequestParam("hotelId") int hotelId, @RequestParam("roomPrice") int roomPrice,
+			@RequestParam("hotelName") String hotelName, ModelAndView modelAndView, Model model) {
 		modelAndView.setViewName("HotelList");
-		
+
 		int roomId = homeService.checkAvailability(hotelId, g_checkInDate, g_checkOutDate, g_roomType);
 		g_roomPrice = roomPrice;
 		g_hotelName = hotelName;
 		g_roomId = roomId;
-		if(roomId > 0) {
+		if (roomId > 0) {
 			model.addAttribute("available", true);
-		}
-		else {
+		} else {
 			model.addAttribute("notAvailable", true);
-			modelAndView.addObject("hotelDetails", hotelDetails);
+			modelAndView.addObject("hotelDetails", g_hotelDetails);
 		}
 		return modelAndView;
 	}
-	
+
 	@RequestMapping(value = "/payment", method = RequestMethod.GET)
-	public ModelAndView viewPayment(ModelAndView modelAndView, Model model) {
-		modelAndView.setViewName("Payment");
-		model.addAttribute("hotelName", g_hotelName);
-		model.addAttribute("roomPrice", g_roomPrice);
-		model.addAttribute("roomId", g_roomId);
+	public ModelAndView viewPayment(ModelAndView modelAndView, Model model, HttpServletRequest request) {
+
+		request.getSession().setAttribute("hotelName", g_hotelName);
+		request.getSession().setAttribute("roomPrice", g_roomPrice);
+		request.getSession().setAttribute("roomId", g_roomId);
+
+		if (request.getSession().getAttribute("loggedIn") != null) {
+			modelAndView.setViewName("Payment");
+			return modelAndView;
+		}
+		modelAndView.setViewName("Login");
+		model.addAttribute("loginMessage", "Please login to continue");
+		request.getSession().setAttribute("requestLogin", true);
+		model.addAttribute("user", new User());
 		return modelAndView;
+
 	}
-	
+
 	@RequestMapping(value = "/paymentSuccess", method = RequestMethod.POST)
-	public ModelAndView paymentSuccess(ModelAndView modelAndView, Model model) {
-		modelAndView.setViewName("Confirmation");
-		
-//		model.addAttribute("hotelName", g_hotelName);
-//		model.addAttribute("roomPrice", g_roomPrice);
-//		model.addAttribute("roomId", g_roomId);
+	public String paymentSuccess(ModelMap map, HttpServletRequest request) {
+
 		Rooms room = roomService.getRoom(g_roomId);
-		
+
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
 		LocalDate checkInDate = LocalDate.parse(g_checkInDate, formatter);
 		LocalDate checkOutDate = LocalDate.parse(g_checkOutDate, formatter);
-		
+
 		Bookings bookings = new Bookings(room, checkInDate, checkOutDate);
 		bookingService.saveBookings(bookings);
-		return modelAndView;
+
+		map.addAttribute("userEmailId", request.getSession().getAttribute("userEmailId").toString());
+		map.addAttribute("userFullName", request.getSession().getAttribute("userFullName").toString());
+		map.addAttribute("userPhoneNum", request.getSession().getAttribute("userPhoneNum").toString());
+		map.addAttribute("checkInDate", g_checkInDate);
+		map.addAttribute("checkOutDate", g_checkOutDate);
+		return "Confirmation";
 	}
+
 }

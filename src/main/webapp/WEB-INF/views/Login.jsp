@@ -1,14 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page isELIgnored="false"%>
+<%@include file="/WEB-INF/views/include.jsp"%>
+<%@ page session="true"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Login Page</title>
 <style>
 
 <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
@@ -58,6 +54,7 @@ label {
 		<input type='checkbox' id='form-switch'>
 	<form:form id='login-form' action="validateLogin" modelAttribute="user">
 		<h1>Welcome to Login Page</h1>
+		<p class="error">${loginMessage}</p>
 		<p class="error">${invaliadUserMessage}</p>
 		UserName:<form:input path="userName" placeholder="Username" required="true"></form:input>
 		 UserPassword:<form:input path="userPassword" type="password" placeholder="Password" required="true"></form:input>

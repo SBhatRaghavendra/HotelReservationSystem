@@ -25,16 +25,14 @@ public class Rooms {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int roomId;
 
-	@NotEmpty
 	private int roomType;
 
-	@NotEmpty
 	private int roomPrice;
 
 	@ManyToOne
 	@JoinColumn(name = "hotelId", nullable = false)
 	private Hotel hotel;
-	
+
 	@OneToMany(mappedBy = "rooms")
 	private Set<Bookings> bookings;
 
@@ -77,8 +75,6 @@ public class Rooms {
 	public void setBookings(Set<Bookings> bookings) {
 		this.bookings = bookings;
 	}
-	
-	
 
 	public Rooms(int roomType, int roomPrice, Hotel hotel, Set<Bookings> bookings) {
 		super();
@@ -86,6 +82,14 @@ public class Rooms {
 		this.roomPrice = roomPrice;
 		this.hotel = hotel;
 		this.bookings = bookings;
+	}
+
+	public Rooms(int roomType, int roomPrice, Hotel hotel) {
+		super();
+		this.roomType = roomType;
+		this.roomPrice = roomPrice;
+		this.hotel = hotel;
+
 	}
 
 	public Rooms() {

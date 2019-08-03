@@ -2,7 +2,9 @@ package com.risk.controller;
 
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +93,9 @@ public class UserController {
 		if (userName.equals("admin")) {
 			boolean adminCredentials = userservice.checkLogin(user.getUserName(), user.getUserPassword());
 			if (adminCredentials) {
-				return "AdminOperation";
+				request.getSession().setAttribute("admin", "logged in");
+				request.getSession().setAttribute("loggedOut", null);
+				return "redirect:/hotel";
 			} else {
 				return "redirect:/invaliduser";
 			}
@@ -103,13 +107,17 @@ public class UserController {
 			map.addAttribute("invaliadUserMessage", "");
 			g_userdetails = userservice.getUserDetails(user.getUserName());
 			
-			//
-			
+			request.getSession().setAttribute("loggedIn", true);
+			request.getSession().setAttribute("loggedOut", null);
 			request.getSession().setAttribute("userName", g_userdetails.getUserName());
 			request.getSession().setAttribute("userEmailId", g_userdetails.getUserEmailId());
 			request.getSession().setAttribute("userFullName", g_userdetails.getUserFullName());
 			request.getSession().setAttribute("userPhoneNum", g_userdetails.getUserPhoneNum());
 			
+			if(request.getSession().getAttribute("requestLogin") != null) {
+				request.getSession().setAttribute("requestLogin", false);
+				return "Payment";
+			}
 			return "home";
 		} else {
 			return "redirect:/invaliduser";
@@ -119,18 +127,15 @@ public class UserController {
 	// Login Page Validation for Invalid User(Author=Nupur)
 	@RequestMapping("/invaliduser")
 	public String invaliduser(@ModelAttribute("user") User user, ModelMap map) {
-		// map.put("user", user);
 		map.addAttribute("invaliadUserMessage", "Invalid UserName or Password");
 		return "Login";
 	}
-
-	// Confirmation Page(Author=Nupur)
-	@RequestMapping("/Confirm")
-	public String confirm(ModelMap map) {
-		map.addAttribute("userEmailId", g_userdetails.getUserEmailId());
-		map.addAttribute("userPhoneNum", g_userdetails.getUserPhoneNum());
-		map.addAttribute("userFullName", g_userdetails.getUserFullName());
-		return "confirmation";
+	
+	//Controller to logout from current session
+	@RequestMapping("/logout")
+	public String logout(HttpServletRequest session) {
+		session.getSession().setAttribute("loggedOut", "logged out");
+		return "redirect:/home";
 	}
 
 }
