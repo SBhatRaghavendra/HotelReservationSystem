@@ -141,7 +141,7 @@ public class UserController {
 		return "Login";
 	}
 	
-	//Controller to logout from current session (Author=Raghavendra)
+	//Controller to logout from current session. After logout, user is redirected to home page. (Author=Raghavendra)
 	@RequestMapping("/logout")
 	public String logout(HttpServletRequest session) {
 		session.getSession().setAttribute("loggedOut", "logged out");

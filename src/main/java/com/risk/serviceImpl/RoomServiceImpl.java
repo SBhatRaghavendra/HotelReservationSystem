@@ -14,6 +14,7 @@ public class RoomServiceImpl implements RoomService{
 	@Autowired
 	RoomDao roomDao;
 	
+	//Service method to retrieve room object from database by passing roomId.
 	@Override
 	@Transactional
 	public Rooms getRoom(int roomId) {

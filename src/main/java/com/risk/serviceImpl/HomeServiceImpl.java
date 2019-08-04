@@ -32,12 +32,14 @@ public class HomeServiceImpl implements HomeService {
 		return true;
 	}
 
+	//Service method to retrieve required hotel details such as hotel name, hotel image and room price
 	@Override
 	@Transactional
 	public List<HotelDetails> getHotelList(String location, String checkInDate, String checkOutDate, int roomType) {
 		return hotelDetailsDao.getHotelList(location, checkInDate, checkOutDate, roomType);
 	}
 	
+	//Service method to check for availability of rooms in a particular hotel.
 	@Transactional
 	public int checkAvailability(int hotelId, String checkInDate, String checkOutDate, int roomType) {
 		return hotelDetailsDao.checkAvailability(hotelId, checkInDate, checkOutDate, roomType);

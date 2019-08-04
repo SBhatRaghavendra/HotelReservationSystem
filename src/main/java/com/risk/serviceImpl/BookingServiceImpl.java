@@ -14,6 +14,7 @@ public class BookingServiceImpl implements BookingService {
 	@Autowired
 	private BookingDao bookingDao;
 
+	//Service method to save booking details. Returns bookingId to the required controller.
 	@Override
 	@Transactional
 	public int  saveBookings(Bookings bookingDetails) {

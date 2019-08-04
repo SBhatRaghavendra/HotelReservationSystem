@@ -13,6 +13,7 @@ public class BookingDaoImpl implements BookingDao {
 	@Autowired
 	private SessionFactory session;
 
+	//This method is used to save the Booking Details to the database. It returns the bookingId.
 	@Override
 	public int saveBookings(Bookings bookingDetails) {
 	return (int) session.getCurrentSession().save(bookingDetails);

@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
 		return userDao.getUserDetails(userName);
 	}
 
+	//Service method to encrypt user password. Returns encrypted password.
 	public String encryptPassword(String password) throws NoSuchAlgorithmException {
 		return userDao.encryptPassword(password);
 	}
