@@ -1,5 +1,6 @@
 package com.risk.dao;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import com.risk.model.User;
@@ -26,4 +27,7 @@ public interface UserDao {
 
 	//Fetching User data with particular User Name
 	public User getUserDetails(String userName);
+	
+	public String encryptPassword(String password) throws NoSuchAlgorithmException;
+	
 }

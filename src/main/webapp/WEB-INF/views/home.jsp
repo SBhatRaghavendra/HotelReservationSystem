@@ -35,18 +35,16 @@
 <!-- Theme Style -->
 <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
 
+<style type="text/css">
+.test {
+	position: absolute;
+	z-index: 5;
+	color: black;
+}
+</style>
+
 </head>
 <body>
-	<%
-		if (session.getAttribute("invalidDate") != null) {
-	%>
-	<script>
-		alert("Please enter valid Check-In and Check-Out dates");
-	</script>
-	<%
-		}
-		session.setAttribute("invalidDate", null);
-	%>
 
 	<header class="site-header js-site-header">
 		<div class="container-fluid">
@@ -54,18 +52,19 @@
 				<div class="col-6 col-lg-4 site-logo" data-aos="fade">
 					<a href="index.html">HVNR</a>
 					<%
-						if(session.getAttribute("loggedOut") == null) {
+						if (session.getAttribute("loggedOut") == null && session.getAttribute("userFullName") != null) {
 					%>
 					<h4 class="username">
+						Hello,
 						<%
 							out.println(session.getAttribute("userFullName"));
 						%>
 					</h4>
 					<%
 						}
-						session.setAttribute("invalidDate", null);
 					%>
 				</div>
+
 				<div class="col-6 col-lg-8">
 
 
@@ -80,9 +79,17 @@
 								<div class="row full-height align-items-center">
 									<div class="col-md-6 mx-auto">
 										<ul class="list-unstyled menu">
-											<li class="active"><a href="home.jsp">Home</a></li>
-											<li><a href="loginPage">Login</a></li>
-											<li><a href="Register">Register</a></li>
+											<li class="active"><a href="home">Home</a></li>
+
+											<%
+											if ((session.getAttribute("userFullName") == null) || session.getAttribute("loggedOut") == "logged out") {
+											%>
+												<li><a href="loginPage">Login</a></li>
+												<li><a href="Register">Register</a></li>
+											<% }
+											else { %>
+												<li><a href="logout">LogOut</a></li>
+											<% } %>
 										</ul>
 									</div>
 								</div>
@@ -155,6 +162,17 @@
 									<input type="text" name="checkOutDate" id="txtToDate"
 										class="form-control date" required />
 								</div>
+								<%
+									if (session.getAttribute("invalidDate") != null) {
+								%>
+								<span class="test"> <%
+								out.println(session.getAttribute("invalidDate"));
+								%>
+								</span>
+								<%
+									}
+									session.setAttribute("invalidDate", null);
+								%>
 							</div>
 
 							<div class="col-md-3 mb-2 mb-md-0">

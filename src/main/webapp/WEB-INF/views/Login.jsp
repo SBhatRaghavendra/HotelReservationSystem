@@ -59,7 +59,7 @@ label {
 		UserName:<form:input path="userName" placeholder="Username" required="true"></form:input>
 		 UserPassword:<form:input path="userPassword" type="password" placeholder="Password" required="true"></form:input>
 		<button type='submit'>Login</button>
-		<a href="/Project/Register/">Register</a>
+		<a href="Register">Register</a>
 		
 	</form:form>
 	

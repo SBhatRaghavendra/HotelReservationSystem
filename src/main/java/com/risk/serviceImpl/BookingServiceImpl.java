@@ -16,8 +16,8 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	@Transactional
-	public void saveBookings(Bookings bookingDetails) {
-		bookingDao.saveBookings(bookingDetails);
+	public int  saveBookings(Bookings bookingDetails) {
+		return bookingDao.saveBookings(bookingDetails);
 
 	}
 

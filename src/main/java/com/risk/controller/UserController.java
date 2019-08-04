@@ -1,5 +1,6 @@
 package com.risk.controller;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -47,6 +48,11 @@ public class UserController {
 	public String register(@Valid @ModelAttribute("user1") User user, BindingResult result, Map<String, Object> map,
 			ModelMap mapvalidate, HttpServletRequest request) {
 		User userResult = new User();
+		
+		if (result.hasErrors()) {
+			return "Register";
+		}
+		
 		if (userservice.validateuserName(user.getUserName())) {
 			mapvalidate.put("user", user);
 			mapvalidate.addAttribute("invalidUserName", "User Name already exist");
@@ -69,10 +75,14 @@ public class UserController {
 			mapvalidate.addAttribute("invalidEmailId", "EmailId already exist");
 			return "Register";
 		}
-
-		if (result.hasErrors()) {
-			return "Register";
+		
+		try {
+		user.setUserPassword(userservice.encryptPassword(user.getUserPassword()));
 		}
+		catch(NoSuchAlgorithmException e) {
+			
+		}
+		
 		userservice.add(user);
 		userResult = user;
 
@@ -131,7 +141,7 @@ public class UserController {
 		return "Login";
 	}
 	
-	//Controller to logout from current session
+	//Controller to logout from current session (Author=Raghavendra)
 	@RequestMapping("/logout")
 	public String logout(HttpServletRequest session) {
 		session.getSession().setAttribute("loggedOut", "logged out");

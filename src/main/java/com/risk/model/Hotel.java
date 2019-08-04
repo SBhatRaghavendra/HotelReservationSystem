@@ -34,11 +34,6 @@ public class Hotel {
 	@NotEmpty
 	private String hotelImgUrl;
 
-	@NotNull
-	@Min(value = 1)
-	@Pattern(regexp = "[^a-zA-Z]+")
-	private int hotelNumOfRooms;
-
 	@OneToMany(mappedBy = "hotel")
 	private Set<Rooms> rooms;
 
@@ -74,14 +69,6 @@ public class Hotel {
 		this.hotelImgUrl = hotelImgUrl;
 	}
 
-	public int getHotelNumOfRooms() {
-		return hotelNumOfRooms;
-	}
-
-	public void setHotelNumOfRooms(int hotelNumOfRooms) {
-		this.hotelNumOfRooms = hotelNumOfRooms;
-	}
-
 	public Set<Rooms> getRooms() {
 		return rooms;
 	}
@@ -90,13 +77,12 @@ public class Hotel {
 		this.rooms = rooms;
 	}
 
-	public Hotel(String hotelName, String hotelArea, String hotelImgUrl, int hotelNumOfRooms,
+	public Hotel(String hotelName, String hotelArea, String hotelImgUrl,
 			Set<Rooms> rooms) {
 		super();
 		this.hotelName = hotelName;
 		this.hotelArea = hotelArea;
 		this.hotelImgUrl = hotelImgUrl;
-		this.hotelNumOfRooms = hotelNumOfRooms;
 		this.rooms = rooms;
 	}
 

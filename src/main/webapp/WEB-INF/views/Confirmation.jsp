@@ -8,21 +8,12 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
+<link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
 <style type="text/css">
 table {
 	margin-top: 5%;
 }
 
-.logout {
-	margin: -50px 0px;
-	float: right;
-	color: white;
-	height: 50x;
-	width: 90px;
-	background-color: green;
-	padding: 10px;
-	text-align: center;
-}
 </style>
 
 </head>
@@ -31,6 +22,7 @@ table {
 		<div class="ConfirmPage">
 
 			<h3 align="center">Payment is succesfully done.</h3>
+			<a style="color: #ffba5a;" href="home">Home</a>
 			<a class="logout" href="logout">LogOut</a>
 			<table border="1" align="center" width="30%">
 
@@ -53,7 +45,7 @@ table {
 
 				<tr>
 					<td><b>Booking Number:</b></td>
-					<td>bookingId</td>
+					<td>${bookingId}</td>
 				</tr>
 
 				<tr>

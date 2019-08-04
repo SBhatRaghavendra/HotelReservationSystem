@@ -1,5 +1,7 @@
 package com.risk.service;
 
+import java.security.NoSuchAlgorithmException;
+
 import org.springframework.stereotype.Service;
 
 import com.risk.model.User;
@@ -27,4 +29,7 @@ public interface UserService
 	 
 	//Fetching User data with particular User Name
 	 public User getUserDetails(String userName);
+	 
+	public String encryptPassword(String password) throws NoSuchAlgorithmException;
+
 }

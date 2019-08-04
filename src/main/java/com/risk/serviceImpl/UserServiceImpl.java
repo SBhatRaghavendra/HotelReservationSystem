@@ -1,5 +1,7 @@
 package com.risk.serviceImpl;
 
+import java.security.NoSuchAlgorithmException;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +54,10 @@ public class UserServiceImpl implements UserService {
 	public User getUserDetails(String userName) {
 		return userDao.getUserDetails(userName);
 	}
+
+	public String encryptPassword(String password) throws NoSuchAlgorithmException {
+		return userDao.encryptPassword(password);
+	}
+
 
 }

@@ -22,27 +22,34 @@ public class User
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "userId")
 	private int userId;
+	
 	@NotEmpty
 	@Size(min=5, max=50)
 	@Pattern(regexp="[^0-9]+")
 	private String userFullName;
+	
 	@NotEmpty
 	@ValidPassword
 	private String userPassword;
+	
 	@NotEmpty
 	@Size(min=5,max=10)
 	private String userName;
+	
 	@Size(min=12,max=12)
 	@NotNull
 	@Pattern(regexp="[^A-Z]+")
 	private String userAdharNum;
+	
 	@NotEmpty
 	@Size(min=10,max=10)
 	@Pattern(regexp="[^A-Z]+")
 	private String userPhoneNum;
+	
 	@Email
 	@NotEmpty
 	private String userEmailId;
+	
 	public int getUserId() {
 		return userId;
 	}

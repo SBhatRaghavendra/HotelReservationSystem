@@ -67,7 +67,7 @@ public class CustomerController {
 			@RequestParam("roomType") int roomType, HttpServletRequest request) {
 
 		if (!homeService.isValidDates(checkInDate, checkOutDate)) {
-			request.getSession().setAttribute("invalidDate", "invalidDate");
+			request.getSession().setAttribute("invalidDate", "Please enter valid check-in and check-out dates");
 			return "home";
 		}
 
@@ -135,13 +135,14 @@ public class CustomerController {
 		LocalDate checkOutDate = LocalDate.parse(g_checkOutDate, formatter);
 
 		Bookings bookings = new Bookings(room, checkInDate, checkOutDate);
-		bookingService.saveBookings(bookings);
+		int bookingId = bookingService.saveBookings(bookings);
 
 		map.addAttribute("userEmailId", request.getSession().getAttribute("userEmailId").toString());
 		map.addAttribute("userFullName", request.getSession().getAttribute("userFullName").toString());
 		map.addAttribute("userPhoneNum", request.getSession().getAttribute("userPhoneNum").toString());
 		map.addAttribute("checkInDate", g_checkInDate);
 		map.addAttribute("checkOutDate", g_checkOutDate);
+		map.addAttribute("bookingId", bookingId);
 		return "Confirmation";
 	}
 

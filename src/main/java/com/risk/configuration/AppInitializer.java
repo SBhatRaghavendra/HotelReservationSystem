@@ -1,5 +1,6 @@
 package com.risk.configuration;
 
+import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 public class AppInitializer implements WebApplicationInitializer {
 
+	
 	public void onStartup(ServletContext container) throws ServletException {
 
 		AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
@@ -20,5 +22,6 @@ public class AppInitializer implements WebApplicationInitializer {
 
 		servlet.setLoadOnStartup(1);
 		servlet.addMapping("/");
+		         
 	}
 }

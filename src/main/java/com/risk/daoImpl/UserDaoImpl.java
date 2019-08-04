@@ -1,5 +1,6 @@
 package com.risk.daoImpl;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -9,6 +10,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -20,22 +22,23 @@ public class UserDaoImpl implements UserDao {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	//Saving registration data in database
+	// Saving registration data in database
 	public void add(User user) {
 		sessionFactory.getCurrentSession().save(user);
 	}
 
-	//Login validation function
-	public boolean checkLogin(String userName, String userPassword) 
-	{
+	// Login validation function
+	public boolean checkLogin(String userName, String userPassword) {
 		Session session = sessionFactory.openSession();
 		boolean userFound = false;
-		// using Hibernate Query Language
-		String SQL_QUERY = " from User as o where o.userName= '" + userName + "' and o.userPassword= '" + userPassword+ "'";
+		
+		String SQL_QUERY = " from User as o where o.userName= '" + userName + "'";
 		Query query = (Query) session.createQuery(SQL_QUERY);
 		List list = ((org.hibernate.Query) query).list();
 
-		if ((list != null) && (list.size() > 0)) {
+		String encryptedPassword = ((User)list.get(0)).getUserPassword();
+		
+		if ((list != null) && (list.size() > 0) && BCrypt.checkpw(userPassword, encryptedPassword)) {
 			userFound = true;
 		}
 
@@ -43,7 +46,12 @@ public class UserDaoImpl implements UserDao {
 		return userFound;
 	}
 
-	//Validate Aadhar Number(Aadhar Number is unique or not)
+	public String encryptPassword(String password) throws NoSuchAlgorithmException {
+		String generatedSecuredPasswordHash = BCrypt.hashpw(password, BCrypt.gensalt(12));
+		return generatedSecuredPasswordHash;
+	}
+
+	// Validate Aadhar Number(Aadhar Number is unique or not)
 	public boolean validateAdharNum(String userAdharNum) {
 		Session session = sessionFactory.openSession();
 		boolean AdharNumfound = false;
@@ -58,7 +66,7 @@ public class UserDaoImpl implements UserDao {
 		return AdharNumfound;
 	}
 
-	//Validate User Name(User Name is unique or not)
+	// Validate User Name(User Name is unique or not)
 	public boolean validateuserName(String userName) {
 		Session session = sessionFactory.openSession();
 		boolean UserNumfound = false;
@@ -73,7 +81,7 @@ public class UserDaoImpl implements UserDao {
 		return UserNumfound;
 	}
 
-	//Validate Email Id(Email Id is unique or not)
+	// Validate Email Id(Email Id is unique or not)
 	public boolean validateuserEmailId(String userEmailId) {
 		Session session = sessionFactory.openSession();
 		boolean userEmailfound = false;
@@ -88,7 +96,7 @@ public class UserDaoImpl implements UserDao {
 		return userEmailfound;
 	}
 
-	//Validate Phone Number(Phone Number is unique or not)
+	// Validate Phone Number(Phone Number is unique or not)
 	public boolean validateuserPhoneNum(String userPhoneNum) {
 		Session session = sessionFactory.openSession();
 		boolean UserPhoneNumfound = false;
@@ -102,8 +110,8 @@ public class UserDaoImpl implements UserDao {
 		session.close();
 		return UserPhoneNumfound;
 	}
-	
-	//Fetching User data with particular User Name
+
+	// Fetching User data with particular User Name
 	public User getUserDetails(String userName) {
 		Session session = sessionFactory.openSession();
 		// using Hibernate Query Language

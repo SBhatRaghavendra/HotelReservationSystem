@@ -1819,7 +1819,7 @@ opacity
 
 .img-dimensions {
 	height: 500px;
-	width: 500px;
+	width: fill-content;
 }
 
 table {
@@ -1866,8 +1866,8 @@ table {
 }
 
 #error {
-	color: black;
-	font-size: 22px;
+	color: #400040;
+	font-size: 20px;
 }
 
 
@@ -1910,4 +1910,15 @@ table {
 .username {
 	float: right;
 	color: white;
+}
+
+.logout {
+	margin: -50px 0px;
+	float: right;
+	color: white;
+	height: 50x;
+	width: 90px;
+	background-color: green;
+	padding: 10px;
+	text-align: center;
 }

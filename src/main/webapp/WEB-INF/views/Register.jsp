@@ -67,7 +67,7 @@ label {
 		 <p class="error">${invalidEmailId}</p>
 		<form:errors path="userEmailId" cssClass="error" />
 		<input type="submit" value="Register"/>
-		<a href="/Project/loginPage/">Already Registered?SignIn</a>
+		<a href="loginPage">Already Registered?Sign In</a>
 	</form:form>
 </body>
 </html>
