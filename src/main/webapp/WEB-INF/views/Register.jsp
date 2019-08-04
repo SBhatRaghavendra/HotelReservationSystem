@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert Nik here</title>
+<title>Register</title>
 <style>
 .error {
 	color: red;

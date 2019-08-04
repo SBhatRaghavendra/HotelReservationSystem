@@ -41,8 +41,7 @@ public class AdminController {
 	@RequestMapping("/hotelaction")
 	public String doAction(@Valid @ModelAttribute("hotel") Hotel hotel, BindingResult result,
 			@RequestParam String action, Map<String, Object> map, @RequestParam String OneBeddedRoomNum,
-			@RequestParam String TwoBeddedRoomNum, @RequestParam String TypeOneprice, @RequestParam String TypeTwoprice,
-			@RequestParam CommonsMultipartFile file, HttpSession session) {
+			@RequestParam String TwoBeddedRoomNum, @RequestParam String TypeOneprice, @RequestParam String TypeTwoprice) {
 		Hotel hotelResult = new Hotel();
 
 		if (result.hasErrors()) {

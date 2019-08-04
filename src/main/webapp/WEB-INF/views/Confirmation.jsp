@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Confirmation</title>
 <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
 <style type="text/css">
 table {
