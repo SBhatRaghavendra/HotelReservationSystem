@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="hotelreservation:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>hotelreservation</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="hotelreservation.war">
+      <element id="artifact" artifact-name="hotelreservation:war exploded" />
+    </root>
+  </artifact>
+</component>

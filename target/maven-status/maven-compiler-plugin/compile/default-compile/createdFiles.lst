@@ -1,0 +1,12 @@
+com\risk\daoImpl\HotelDetailsDaoImpl.class
+com\risk\model\Bookings.class
+com\risk\dao\HotelDetailsDao.class
+com\risk\model\Rooms.class
+com\risk\model\HotelDetails.class
+com\risk\service\HomeService.class
+com\risk\serviceImpl\HomeServiceImpl.class
+com\risk\model\Hotel.class
+com\risk\configuration\HibernateConfiguration.class
+com\risk\controller\EntryController.class
+com\risk\configuration\AppConfig.class
+com\risk\configuration\AppInitializer.class
